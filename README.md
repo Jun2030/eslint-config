@@ -12,10 +12,18 @@
 ## :bulb:使用说明
 
 ### 1. 安装
-
-```bash
-pnpm add -D @2030/eslint-config
-```
+- `npm` 安装：
+  ```bash
+  > npm i -D @2030/eslint-config
+  ```
+- `yarn` 安装
+  ```bash
+  > yarn add -D @2030/eslint-config
+  ```
+- `pnpm` 安装
+  ```bash
+  > pnpm add -D @2030/eslint-config
+  ```
 
 ### 2. 配置 `.eslintrc`
 
