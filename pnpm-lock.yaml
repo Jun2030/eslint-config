@@ -107,7 +107,6 @@ importers:
       '@2030/eslint-config-basic': link:../basic
       '@typescript-eslint/eslint-plugin': 5.36.1_lbwfnm54o3pmr3ypeqp3btnera
       '@typescript-eslint/parser': 5.36.1_yqf6kl63nyoq5megxukfnom5rm
-    devDependencies:
       eslint: 8.23.0
       typescript: 4.8.2
 
