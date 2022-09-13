@@ -1,4 +1,4 @@
-# :sparkles:@2030/eslint-config
+# :sparkles:@2030/eslint-config-vue
 
 ## :fire:风格说明 
 
@@ -14,14 +14,14 @@
 ### 1. 安装
 
 ```bash
-pnpm add -D @2030/eslint-config
+pnpm add -D @2030/eslint-config-vue
 ```
 
 ### 2. 配置 `.eslintrc`
 
 ```json
 {
-  "extends": "@2030"
+  "extends": "@2030/eslint-config-vue"
 }
 ```
 
