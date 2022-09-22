@@ -1,5 +1,11 @@
 # :sparkles:@2030/eslint-config
 
+![npm](https://img.shields.io/npm/v/@2030/eslint-config)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Jun2030/eslint-config/npm-publish-prod)
+![NPM](https://img.shields.io/npm/l/@2030/eslint-config)
+![GitHub top language](https://img.shields.io/github/languages/top/Jun2030/eslint-config)
+![npm](https://img.shields.io/npm/dt/@2030/eslint-config)
+
 ## :fire:风格说明 
 
 - 强制使用单引号，分号
@@ -13,9 +19,18 @@
 
 ### 1. 安装
 
-```bash
-pnpm add -D @2030/eslint-config
-```
+- `npm` 安装:
+  ```bash
+  > npm i -D @2030/eslint-config
+  ```
+- `yarn` 安装:
+  ```bash
+  > yarn add -D @2030/eslint-config
+  ```
+- `pnpm` 安装:
+  ```bash
+  > pnpm add -D @2030/eslint-config
+  ```
 
 ### 2. 配置 `.eslintrc`
 
