@@ -1,6 +1,6 @@
 {
   "name": "@2030/eslint-config-basic",
-  "version": "0.0.2",
+  "version": "0.0.3-beta.0",
   "description": "",
   "keywords": [
     "eslint-config-basic"
@@ -10,7 +10,7 @@
   "author": "Zi Jun <zijun2030@163.com>",
   "main": "index.js",
   "files": [
-    "index.js"
+    "*.js"
   ],
   "scripts": {
     "lint": "eslint . --config=index.js"
