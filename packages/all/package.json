@@ -1,6 +1,6 @@
 {
   "name": "@2030/eslint-config",
-  "version": "0.0.3-beta.2",
+  "version": "0.0.3-beta.3",
   "description": "ZiJun's ESlint config for work projects",
   "keywords": [
     "eslint-config"

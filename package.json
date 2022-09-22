@@ -1,6 +1,6 @@
 {
   "name": "@2030/eslint-config-monorepo",
-  "version": "0.0.3-beta.2",
+  "version": "0.0.3-beta.3",
   "private": true,
   "description": "Eslint config for ZiJun",
   "keywords": [
