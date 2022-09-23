@@ -24,7 +24,14 @@ module.exports = {
     '@2030/eslint-config-ts',
   ],
   rules: {
-    // 'vue/max-attributes-per-line': 'off',
+    'vue/max-attributes-per-line': ['error', {
+      singleline: {
+        max: 4,
+      },
+      multiline: {
+        max: 1,
+      },
+    }],
     'vue/no-v-html': 'off',
     'vue/require-prop-types': 'off',
     'vue/require-default-prop': 'off',
