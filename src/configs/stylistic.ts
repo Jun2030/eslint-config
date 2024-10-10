@@ -4,6 +4,7 @@ import { pluginJun } from '../plugins'
 import { interopDefault } from '../utils'
 
 export const StylisticConfigDefaults: StylisticConfig = {
+  braceStyle: '1tbs',
   indent: 2,
   jsx: true,
   quotes: 'single',
@@ -49,9 +50,9 @@ export async function stylistic(
       },
       rules: {
         ...config.rules,
-
         'jun/consistent-chaining': 'error',
         'jun/consistent-list-newline': 'error',
+        'style/brace-style': ['error', '1tbs', { allowSingleLine: true }],
 
         ...(lessOpinionated
           ? {
