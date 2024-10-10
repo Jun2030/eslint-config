@@ -1,6 +1,7 @@
-import { interopDefault } from '../utils'
 import type { OptionsOverrides, StylisticConfig, TypedFlatConfigItem } from '../types'
+
 import { pluginJun } from '../plugins'
+import { interopDefault } from '../utils'
 
 export const StylisticConfigDefaults: StylisticConfig = {
   indent: 2,
@@ -49,6 +50,7 @@ export async function stylistic(
       rules: {
         ...config.rules,
 
+        'jun/consistent-chaining': 'error',
         'jun/consistent-list-newline': 'error',
 
         ...(lessOpinionated

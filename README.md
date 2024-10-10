@@ -14,7 +14,7 @@
   - 单引号，无分
   - 使用ESLint Stylistic
 - 默认遵守.gitignore
-- 支持 ESLint v9 或 v8.50.0+
+- 要求ESLint v9.5.0+
 
 ## 用法
 

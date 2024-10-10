@@ -1,7 +1,15 @@
+import type {
+  OptionsFiles,
+  OptionsHasTypeScript,
+  OptionsOverrides,
+  OptionsStylistic,
+  OptionsVue,
+  TypedFlatConfigItem,
+} from '../types'
+
 import { mergeProcessors } from 'eslint-merge-processors'
-import { interopDefault } from '../utils'
-import type { OptionsFiles, OptionsHasTypeScript, OptionsOverrides, OptionsStylistic, OptionsVue, TypedFlatConfigItem } from '../types'
 import { GLOB_VUE } from '../globs'
+import { interopDefault } from '../utils'
 
 export async function vue(
   options: OptionsVue & OptionsHasTypeScript & OptionsOverrides & OptionsStylistic & OptionsFiles = {},
@@ -102,11 +110,13 @@ export async function vue(
               ...pluginVue.configs['vue3-recommended'].rules as any,
             },
 
+        'jun/no-top-level-await': 'off',
         'node/prefer-global/process': 'off',
+        'ts/explicit-function-return-type': 'off',
+
         'vue/block-order': ['error', {
           order: ['script', 'template', 'style'],
         }],
-
         'vue/component-name-in-template-casing': ['error', 'PascalCase'],
         'vue/component-options-name-casing': ['error', 'PascalCase'],
         // this is deprecated
@@ -163,7 +173,7 @@ export async function vue(
                 multiline: 'always',
                 singleline: 'always',
               }],
-              'vue/brace-style': ['error', 'stroustrup', { allowSingleLine: true }],
+              'vue/brace-style': ['error', '1tbs', { allowSingleLine: true }],
               'vue/comma-dangle': ['error', 'always-multiline'],
               'vue/comma-spacing': ['error', { after: true, before: false }],
               'vue/comma-style': ['error', 'last'],

@@ -1,10 +1,11 @@
+import type { Awaitable, TypedFlatConfigItem } from './types'
+
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { isPackageExists } from 'local-pkg'
-import type { Awaitable, TypedFlatConfigItem } from './types'
 
 const scopeUrl = fileURLToPath(new URL('.', import.meta.url))
-const isCwdInScope = isPackageExists('@2030/eslint-config')
+const isCwdInScope = isPackageExists('@jun2030/eslint-config')
 
 export const parserPlain = {
   meta: {
@@ -41,7 +42,7 @@ export async function combine(...configs: Awaitable<TypedFlatConfigItem | TypedF
  *
  * @example
  * ```ts
- * import { renameRules } from '@2030/eslint-config'
+ * import { renameRules } from '@jun2030/eslint-config'
  *
  * export default [{
  *   rules: renameRules(
@@ -74,7 +75,7 @@ export function renameRules(
  *
  * @example
  * ```ts
- * import { renamePluginInConfigs } from '@2030/eslint-config'
+ * import { renamePluginInConfigs } from '@jun2030/eslint-config'
  * import someConfigs from './some-configs'
  *
  * export default renamePluginInConfigs(someConfigs, {
@@ -136,15 +137,17 @@ export function isInEditorEnv(): boolean {
     return false
   if (isInGitHooksOrLintStaged())
     return false
-  return !!process.env.VSCODE_PID
-    || !!process.env.VSCODE_CWD
-    || !!process.env.JETBRAINS_IDE
-    || !!process.env.VIM
-    || !!process.env.NVIM
+  return !!(process.env.VSCODE_PID
+    || process.env.VSCODE_CWD
+    || process.env.JETBRAINS_IDE
+    || process.env.VIM
+    || process.env.NVIM
+  )
 }
 
 export function isInGitHooksOrLintStaged(): boolean {
-  return !!process.env.GIT_PARAMS
-    || !!process.env.VSCODE_GIT_COMMAND
-    || !!process.env.npm_lifecycle_script?.startsWith('lint-staged')
+  return !!(process.env.GIT_PARAMS
+    || process.env.VSCODE_GIT_COMMAND
+    || process.env.npm_lifecycle_script?.startsWith('lint-staged')
+  )
 }

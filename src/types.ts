@@ -1,10 +1,10 @@
-import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore'
-import type { ParserOptions } from '@typescript-eslint/parser'
-import type { Options as VueBlocksOptions } from 'eslint-processor-vue-blocks'
-import type { Linter } from 'eslint'
 import type { StylisticCustomizeOptions } from '@stylistic/eslint-plugin'
-import type { VendoredPrettierOptions } from './vender/prettier-types'
+import type { ParserOptions } from '@typescript-eslint/parser'
+import type { Linter } from 'eslint'
+import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore'
+import type { Options as VueBlocksOptions } from 'eslint-processor-vue-blocks'
 import type { ConfigNames, RuleOptions } from './typegen'
+import type { VendoredPrettierOptions } from './vender/prettier-types'
 
 export type Awaitable<T> = T | Promise<T>
 
@@ -33,7 +33,7 @@ export interface OptionsVue extends OptionsOverrides {
   /**
    * Create virtual files for Vue SFC blocks to enable linting.
    *
-   * @see https://github.com/antfu/eslint-processor-vue-blocks
+   * @see https://github.com/jun/eslint-processor-vue-blocks
    * @default true
    */
   sfcBlocks?: boolean | VueBlocksOptions
@@ -134,6 +134,15 @@ export interface OptionsComponentExts {
   componentExts?: string[]
 }
 
+export interface OptionsUnicorn {
+  /**
+   * Include all rules recommended by `eslint-plugin-unicorn`, instead of only ones picked by Anthony.
+   *
+   * @default false
+   */
+  allRecommended?: boolean
+}
+
 export interface OptionsTypeScriptParserOptions {
   /**
    * Additional parser options for TypeScript.
@@ -193,7 +202,7 @@ export interface OptionsProjectType {
 
 export interface OptionsRegExp {
   /**
-   * Override rule levels
+   * Override rulelevels
    */
   level?: 'error' | 'warn'
 }
@@ -209,7 +218,7 @@ export interface OptionsUnoCSS extends OptionsOverrides {
    */
   attributify?: boolean
   /**
-   * Enable strict mode by throwing errors about block listed classes.
+   * Enable strict mode by throwing errors about blocklisted classes.
    * @default false
    */
   strict?: boolean
@@ -221,7 +230,7 @@ export interface OptionsConfig extends OptionsComponentExts, OptionsProjectType 
    *
    * Passing an object to configure the options.
    *
-   * @see https://github.com/antfu/eslint-config-flat-gitignore
+   * @see https://github.com/jun/eslint-config-flat-gitignore
    * @default true
    */
   gitignore?: boolean | FlatGitignoreOptions
@@ -259,6 +268,13 @@ export interface OptionsConfig extends OptionsComponentExts, OptionsProjectType 
    * @default true
    */
   jsx?: boolean
+
+  /**
+   * Options for eslint-plugin-unicorn.
+   *
+   * @default true
+   */
+  unicorn?: boolean | OptionsUnicorn
 
   /**
    * Enable test support.
