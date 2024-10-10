@@ -44,6 +44,7 @@ export async function typescript(
     'dot-notation': 'off',
     'no-implied-eval': 'off',
     'ts/await-thenable': 'error',
+    'ts/brace-style': ['error', '1tbs', { allowSingleLine: true }],
     'ts/dot-notation': ['error', { allowKeywords: true }],
     'ts/no-floating-promises': 'error',
     'ts/no-for-in-array': 'error',

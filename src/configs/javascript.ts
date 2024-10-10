@@ -190,6 +190,7 @@ export async function javascript(
         'prefer-rest-params': 'error',
         'prefer-spread': 'error',
         'prefer-template': 'error',
+        'style/brace-style': ['error', '1tbs', { allowSingleLine: true }],
         'symbol-description': 'error',
         'unicode-bom': ['error', 'never'],
         'unused-imports/no-unused-imports': isInEditor ? 'off' : 'error',
