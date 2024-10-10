@@ -34,6 +34,7 @@ export default jun(
     },
     rules: {
       'style-migrate/migrate': ['error', { namespaceTo: 'style' }],
+      'brace-style': ['error', '1tbs', { allowSingleLine: true }],
     },
   },
 )
