@@ -1,7 +1,7 @@
 {
   "name": "@2030/eslint-config",
   "type": "module",
-  "version": "3.0.0",
+  "version": "2.3.0",
   "description": "Shareable ESLint config for conventional coding style",
   "author": "Dai Jun <zijun2030@163.com>",
   "license": "MIT",
