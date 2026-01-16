@@ -9,6 +9,9 @@ on:
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # 需要此权限以使用 provenance
     steps:
       - uses: actions/checkout@v3
         with:
@@ -27,6 +30,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: 🎁包发布
-        run: pnpm -r publish --tag beta --no-git-checks
+        run: pnpm -r publish --tag beta --no-git-checks --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
