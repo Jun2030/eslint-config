@@ -40,6 +40,7 @@ export async function sortPackageJson(): Promise<TypedFlatConfigItem[]> {
               'keywords',
               'categories',
               'sideEffects',
+              'imports',
               'exports',
               'main',
               'module',
@@ -76,6 +77,14 @@ export async function sortPackageJson(): Promise<TypedFlatConfigItem[]> {
           {
             order: { type: 'asc' },
             pathPattern: '^(?:resolutions|overrides|pnpm.overrides)$',
+          },
+          {
+            order: { type: 'asc' },
+            pathPattern: '^workspaces\\.catalog$',
+          },
+          {
+            order: { type: 'asc' },
+            pathPattern: '^workspaces\\.catalogs\\.[^.]+$',
           },
           {
             order: [
@@ -116,7 +125,7 @@ export async function sortPackageJson(): Promise<TypedFlatConfigItem[]> {
 export function sortTsconfig(): TypedFlatConfigItem[] {
   return [
     {
-      files: ['**/tsconfig.json', '**/tsconfig.*.json'],
+      files: ['**/[jt]sconfig.json', '**/[jt]sconfig.*.json'],
       name: 'jun/sort/tsconfig-json',
       rules: {
         'jsonc/sort-keys': [
@@ -154,6 +163,7 @@ export function sortTsconfig(): TypedFlatConfigItem[] {
               'useDefineForClassFields',
               'emitDecoratorMetadata',
               'experimentalDecorators',
+              'libReplacement',
               /* Modules */
               'baseUrl',
               'rootDir',
@@ -228,6 +238,7 @@ export function sortTsconfig(): TypedFlatConfigItem[] {
               'isolatedModules',
               'preserveSymlinks',
               'verbatimModuleSyntax',
+              'erasableSyntaxOnly',
               /* Completeness */
               'skipDefaultLibCheck',
               'skipLibCheck',

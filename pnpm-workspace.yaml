@@ -1,2 +1,7 @@
-packages:
-  - 'fixtures/*'
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
+ignoredBuiltDependencies:
+  - esbuild
+  - simple-git-hooks

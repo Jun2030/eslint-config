@@ -1,39 +1,39 @@
-// @ts-expect-error missing types
-import styleMigrate from '@stylistic/eslint-plugin-migrate'
 import { jun } from './src'
 
 export default jun(
   {
-    vue: true,
+    vue: {
+      a11y: true,
+    },
     react: true,
     solid: true,
     svelte: true,
     astro: true,
-    typescript: true,
+    nextjs: false,
+    typescript: {
+      erasableOnly: true,
+    },
+    markdown: {
+      overrides: {
+        'no-dupe-keys': 'off',
+      },
+    },
     formatters: true,
+    pnpm: true,
     type: 'lib',
+    jsx: {
+      a11y: true,
+    },
   },
   {
     ignores: [
-      'fixtures',
-      '_fixtures',
-      'dist',
-      'node_modules',
+      '**/constants-generated.ts',
     ],
   },
   {
     files: ['src/**/*.ts'],
     rules: {
       'perfectionist/sort-objects': 'error',
-    },
-  },
-  {
-    files: ['src/configs/*.ts'],
-    plugins: {
-      'style-migrate': styleMigrate,
-    },
-    rules: {
-      'style-migrate/migrate': ['error', { namespaceTo: 'style' }],
     },
   },
 )

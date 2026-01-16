@@ -5,27 +5,25 @@ import path from 'node:path'
 import process from 'node:process'
 import * as p from '@clack/prompts'
 
-import c from 'picocolors'
+import c from 'ansis'
 
-import { dependenciesMap, pkgJson } from '../constants'
+import { version } from '../../../package.json'
+import { dependenciesMap } from '../constants'
+import { versionsMap } from '../constants-generated'
 
 export async function updatePackageJson(result: PromptResult): Promise<void> {
   const cwd = process.cwd()
 
   const pathPackageJSON = path.join(cwd, 'package.json')
 
-  p.log.step(c.cyan(`Bumping @jun2030/eslint-config to v${pkgJson.version}`))
+  p.log.step(c.cyan`Bumping @2030/eslint-config to v${version}`)
 
   const pkgContent = await fsp.readFile(pathPackageJSON, 'utf-8')
   const pkg: Record<string, any> = JSON.parse(pkgContent)
 
   pkg.devDependencies ??= {}
-  pkg.devDependencies['@jun2030/eslint-config'] = `^${pkgJson.version}`
-  pkg.devDependencies.eslint ??= pkgJson
-    .devDependencies
-    .eslint
-    .replace('npm:eslint-ts-patch@', '')
-    .replace(/-\d+$/, '')
+  pkg.devDependencies['@2030/eslint-config'] = `^${version}`
+  pkg.devDependencies.eslint ??= versionsMap.eslint
 
   const addedPackages: string[] = []
 
@@ -34,20 +32,17 @@ export async function updatePackageJson(result: PromptResult): Promise<void> {
       switch (item) {
         case 'formatter':
           (<const>[
-            'eslint-plugin-format',
-            result.frameworks.includes('astro') ? 'prettier-plugin-astro' : null,
+            ...dependenciesMap.formatter,
+            ...(result.frameworks.includes('astro') ? dependenciesMap.formatterAstro : []),
           ]).forEach((f) => {
-            if (!f)
-              return
-            pkg.devDependencies[f] = pkgJson.devDependencies[f]
+            if (!f) { return }
+            pkg.devDependencies[f] = versionsMap[f as keyof typeof versionsMap]
             addedPackages.push(f)
           })
           break
         case 'unocss':
-          (<const>[
-            '@unocss/eslint-plugin',
-          ]).forEach((f) => {
-            pkg.devDependencies[f] = pkgJson.devDependencies[f]
+          dependenciesMap.unocss.forEach((f) => {
+            pkg.devDependencies[f] = versionsMap[f as keyof typeof versionsMap]
             addedPackages.push(f)
           })
           break
@@ -59,15 +54,14 @@ export async function updatePackageJson(result: PromptResult): Promise<void> {
     const deps = dependenciesMap[framework]
     if (deps) {
       deps.forEach((f) => {
-        pkg.devDependencies[f] = pkgJson.devDependencies[f]
+        pkg.devDependencies[f] = versionsMap[f as keyof typeof versionsMap]
         addedPackages.push(f)
       })
     }
   }
 
-  if (addedPackages.length)
-    p.note(`${c.dim(addedPackages.join(', '))}`, 'Added packages')
+  if (addedPackages.length) { p.note(c.dim(addedPackages.join(', ')), 'Added packages') }
 
   await fsp.writeFile(pathPackageJSON, JSON.stringify(pkg, null, 2))
-  p.log.success(c.green(`Changes wrote to package.json`))
+  p.log.success(c.green`Changes wrote to package.json`)
 }

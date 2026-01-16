@@ -1,23 +1,27 @@
+import type { Linter } from 'eslint'
+
 import type {
   OptionsComponentExts,
+
   OptionsFiles,
   OptionsOverrides,
   OptionsProjectType,
+  OptionsTypeScriptErasableOnly,
   OptionsTypeScriptParserOptions,
   OptionsTypeScriptWithTypes,
   TypedFlatConfigItem,
 } from '../types'
-
 import process from 'node:process'
 import { GLOB_ASTRO_TS, GLOB_MARKDOWN, GLOB_TS, GLOB_TSX } from '../globs'
 import { pluginJun } from '../plugins'
 import { interopDefault, renameRules } from '../utils'
 
 export async function typescript(
-  options: OptionsFiles & OptionsComponentExts & OptionsOverrides & OptionsTypeScriptWithTypes & OptionsTypeScriptParserOptions & OptionsProjectType = {},
+  options: OptionsFiles & OptionsComponentExts & OptionsOverrides & OptionsTypeScriptWithTypes & OptionsTypeScriptParserOptions & OptionsProjectType & OptionsTypeScriptErasableOnly = {},
 ): Promise<TypedFlatConfigItem[]> {
   const {
     componentExts = [],
+    erasableOnly = false,
     overrides = {},
     overridesTypeAware = {},
     parserOptions = {},
@@ -135,6 +139,7 @@ export async function typescript(
         'ts/consistent-type-definitions': ['error', 'interface'],
         'ts/consistent-type-imports': ['error', {
           disallowTypeAnnotations: false,
+          fixStyle: 'separate-type-imports',
           prefer: 'type-imports',
         }],
 
@@ -184,6 +189,22 @@ export async function typescript(
             ...overridesTypeAware,
           },
         }]
+      : [],
+    ...erasableOnly
+      ? [
+          {
+            name: 'jun/typescript/erasable-syntax-only',
+            plugins: {
+              'erasable-syntax-only': await interopDefault(import('eslint-plugin-erasable-syntax-only')),
+            },
+            rules: {
+              'erasable-syntax-only/enums': 'error',
+              'erasable-syntax-only/import-aliases': 'error',
+              'erasable-syntax-only/namespaces': 'error',
+              'erasable-syntax-only/parameter-properties': 'error',
+            } as Record<string, Linter.RuleEntry>,
+          },
+        ]
       : [],
   ]
 }

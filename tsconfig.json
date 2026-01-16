@@ -13,6 +13,8 @@
   ],
   "exclude": [
     "./fixtures/**/*.*",
-    "./_fixtures/**/*.*"
+    "./_fixtures/**/*.*",
+    "./test/**/*.*",
+    "./dist/**/*.*"
   ]
 }

@@ -15,7 +15,7 @@ export async function javascript(
   return [
     {
       languageOptions: {
-        ecmaVersion: 2022,
+        ecmaVersion: 'latest',
         globals: {
           ...globals.browser,
           ...globals.es2021,
@@ -28,7 +28,7 @@ export async function javascript(
           ecmaFeatures: {
             jsx: true,
           },
-          ecmaVersion: 2022,
+          ecmaVersion: 'latest',
           sourceType: 'module',
         },
         sourceType: 'module',
@@ -46,14 +46,13 @@ export async function javascript(
       },
       rules: {
         'accessor-pairs': ['error', { enforceForClassMembers: true, setWithoutGet: true }],
-
         'array-callback-return': 'error',
-
         'block-scoped-var': 'error',
         'constructor-super': 'error',
         'default-case-last': 'error',
         'dot-notation': ['error', { allowKeywords: true }],
         'eqeqeq': ['error', 'smart'],
+
         'jun/no-top-level-await': 'error',
         'new-cap': ['error', { capIsNew: false, newIsCap: true, properties: true }],
         'no-alert': 'error',
@@ -64,7 +63,7 @@ export async function javascript(
         'no-class-assign': 'error',
         'no-compare-neg-zero': 'error',
         'no-cond-assign': ['error', 'always'],
-        'no-console': ['error', { allow: ['warn', 'error'] }],
+        'no-console': ['error', { allow: ['log', 'info', 'warn', 'error'] }],
         'no-const-assign': 'error',
         'no-control-regex': 'error',
         'no-debugger': 'error',
@@ -178,7 +177,7 @@ export async function javascript(
           },
         ],
         'prefer-const': [
-          'error',
+          isInEditor ? 'warn' : 'error',
           {
             destructuring: 'all',
             ignoreReadBeforeAssign: true,
@@ -192,7 +191,7 @@ export async function javascript(
         'prefer-template': 'error',
         'symbol-description': 'error',
         'unicode-bom': ['error', 'never'],
-        'unused-imports/no-unused-imports': isInEditor ? 'off' : 'error',
+        'unused-imports/no-unused-imports': isInEditor ? 'warn' : 'error',
         'unused-imports/no-unused-vars': [
           'error',
           {

@@ -50,7 +50,6 @@ export async function svelte(
       name: 'jun/svelte/rules',
       processor: pluginSvelte.processors['.svelte'],
       rules: {
-        'import/no-mutable-exports': 'off',
         'no-undef': 'off', // incompatible with most recent (attribute-form) generic types RFC
         'no-unused-vars': ['error', {
           args: 'none',
@@ -66,7 +65,6 @@ export async function svelte(
         'svelte/no-dupe-else-if-blocks': 'error',
         'svelte/no-dupe-style-properties': 'error',
         'svelte/no-dupe-use-directives': 'error',
-        'svelte/no-dynamic-slot-name': 'error',
         'svelte/no-export-load-in-svelte-module-in-kit-pages': 'error',
         'svelte/no-inner-declarations': 'error',
         'svelte/no-not-function-handler': 'error',
@@ -97,8 +95,11 @@ export async function svelte(
               'style/no-trailing-spaces': 'off', // superseded by svelte/no-trailing-spaces
               'svelte/derived-has-same-inputs-outputs': 'error',
               'svelte/html-closing-bracket-spacing': 'error',
-              'svelte/html-quotes': ['error', { prefer: quotes }],
-              'svelte/indent': ['error', { alignAttributesVertically: true, indent }],
+              'svelte/html-quotes': ['error', { prefer: quotes === 'backtick' ? 'double' : quotes }],
+              'svelte/indent': ['error', {
+                alignAttributesVertically: true,
+                indent: typeof indent === 'number' ? indent : indent === 'tab' ? 'tab' : 2,
+              }],
               'svelte/mustache-spacing': 'error',
               'svelte/no-spaces-around-equal-signs-in-attribute': 'error',
               'svelte/no-trailing-spaces': 'error',

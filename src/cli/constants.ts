@@ -1,9 +1,6 @@
 import type { ExtraLibrariesOption, FrameworkOption, PromItem } from './types'
 
-import c from 'picocolors'
-import pkgJson from '../../package.json'
-
-export { pkgJson }
+import c from 'ansis'
 
 export const vscodeSettingsString = `
   // Disable the default formatter, use eslint instead
@@ -16,7 +13,7 @@ export const vscodeSettingsString = `
     "source.organizeImports": "never"
   },
 
-  // Silent the stylistic rules in you IDE, but still auto fix them
+  // Silent the stylistic rules in your IDE, but still auto fix them
   "eslint.rules.customizations": [
     { "rule": "style/*", "severity": "off", "fixable": true },
     { "rule": "format/*", "severity": "off", "fixable": true },
@@ -40,6 +37,7 @@ export const vscodeSettingsString = `
     "html",
     "markdown",
     "json",
+    "json5",
     "jsonc",
     "yaml",
     "toml",
@@ -47,6 +45,7 @@ export const vscodeSettingsString = `
     "gql",
     "graphql",
     "astro",
+    "svelte",
     "css",
     "less",
     "scss",
@@ -103,6 +102,15 @@ export const dependenciesMap = {
     'eslint-plugin-astro',
     'astro-eslint-parser',
   ],
+  formatter: [
+    'eslint-plugin-format',
+  ],
+  formatterAstro: [
+    'prettier-plugin-astro',
+  ],
+  nextjs: [
+    '@next/eslint-plugin-next',
+  ],
   react: [
     '@eslint-react/eslint-plugin',
     'eslint-plugin-react-hooks',
@@ -117,6 +125,9 @@ export const dependenciesMap = {
   svelte: [
     'eslint-plugin-svelte',
     'svelte-eslint-parser',
+  ],
+  unocss: [
+    '@unocss/eslint-plugin',
   ],
   vue: [],
 } as const

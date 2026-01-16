@@ -3,6 +3,7 @@ import type { RuleOptions } from './typegen'
 import type { Awaitable, ConfigNames, OptionsConfig, TypedFlatConfigItem } from './types'
 
 import { FlatConfigComposer } from 'eslint-flat-config-utils'
+import { findUpSync } from 'find-up-simple'
 import { isPackageExists } from 'local-pkg'
 import {
   astro,
@@ -16,8 +17,10 @@ import {
   jsonc,
   jsx,
   markdown,
+  nextjs,
   node,
   perfectionist,
+  pnpm,
   react,
   solid,
   sortPackageJson,
@@ -33,7 +36,6 @@ import {
   yaml,
 } from './configs'
 import { formatters } from './configs/formatters'
-
 import { regexp } from './configs/regexp'
 import { interopDefault, isInEditorEnv } from './utils'
 
@@ -60,11 +62,13 @@ export const defaultPluginRenaming = {
   '@eslint-react/hooks-extra': 'react-hooks-extra',
   '@eslint-react/naming-convention': 'react-naming-convention',
 
+  '@next/next': 'next',
   '@stylistic': 'style',
   '@typescript-eslint': 'ts',
-  'import-x': 'import',
+  'import-lite': 'import',
   'n': 'node',
   'vitest': 'test',
+
   'yml': 'yaml',
 }
 
@@ -79,7 +83,7 @@ export const defaultPluginRenaming = {
  *  The merged ESLint configurations.
  */
 export function jun(
-  options: OptionsConfig & Omit<TypedFlatConfigItem, 'files'> = {},
+  options: OptionsConfig & Omit<TypedFlatConfigItem, 'files' | 'ignores'> = {},
   ...userConfigs: Awaitable<TypedFlatConfigItem | TypedFlatConfigItem[] | FlatConfigComposer<any, any> | Linter.Config[]>[]
 ): FlatConfigComposer<TypedFlatConfigItem, ConfigNames> {
   const {
@@ -87,7 +91,13 @@ export function jun(
     autoRenamePlugins = true,
     componentExts = [],
     gitignore: enableGitignore = true,
+    ignores: userIgnores = [],
+    imports: enableImports = true,
+    jsdoc: enableJsdoc = true,
     jsx: enableJsx = true,
+    nextjs: enableNextjs = false,
+    node: enableNode = true,
+    pnpm: enableCatalogs = !!findUpSync('pnpm-workspace.yaml'),
     react: enableReact = false,
     regexp: enableRegexp = true,
     solid: enableSolid = false,
@@ -102,8 +112,7 @@ export function jun(
   if (isInEditor == null) {
     isInEditor = isInEditorEnv()
     if (isInEditor)
-      // eslint-disable-next-line no-console
-      console.log('[@jun2030/eslint-config] Detected running in editor, some rules are disabled.')
+      console.log('[@2030/eslint-config] Detected running in editor, some rules are disabled.')
   }
 
   const stylisticOptions = options.stylistic === false
@@ -112,23 +121,26 @@ export function jun(
       ? options.stylistic
       : {}
 
-  if (stylisticOptions && !('jsx' in stylisticOptions))
-    stylisticOptions.jsx = enableJsx
+  if (stylisticOptions && !('jsx' in stylisticOptions)) { stylisticOptions.jsx = typeof enableJsx === 'object' ? true : enableJsx }
 
   const configs: Awaitable<TypedFlatConfigItem[]>[] = []
 
   if (enableGitignore) {
     if (typeof enableGitignore !== 'boolean') {
-      configs.push(interopDefault(import('eslint-config-flat-gitignore')).then(r => [r({
-        name: 'jun/gitignore',
-        ...enableGitignore,
-      })]))
+      configs.push(
+        interopDefault(import('eslint-config-flat-gitignore')).then(r => [r({
+          name: 'jun/gitignore',
+          ...enableGitignore,
+        })]),
+      )
     }
     else {
-      configs.push(interopDefault(import('eslint-config-flat-gitignore')).then(r => [r({
-        name: 'jun/gitignore',
-        strict: false,
-      })]))
+      configs.push(
+        interopDefault(import('eslint-config-flat-gitignore')).then(r => [r({
+          name: 'jun/gitignore',
+          strict: false,
+        })]),
+      )
     }
   }
 
@@ -137,27 +149,45 @@ export function jun(
 
   // Base configs
   configs.push(
-    ignores(options.ignores),
+    ignores(userIgnores),
     javascript({
       isInEditor,
       overrides: getOverrides(options, 'javascript'),
     }),
     comments(),
-    node(),
-    jsdoc({
-      stylistic: stylisticOptions,
-    }),
-    imports({
-      stylistic: stylisticOptions,
-    }),
     command(),
 
     // Optional plugins (installed but not enabled by default)
     perfectionist(),
   )
 
+  if (enableNode) {
+    configs.push(
+      node(),
+    )
+  }
+
+  if (enableJsdoc) {
+    configs.push(
+      jsdoc({
+        stylistic: stylisticOptions,
+      }),
+    )
+  }
+
+  if (enableImports) {
+    configs.push(
+      imports({
+        stylistic: stylisticOptions,
+        ...resolveSubOptions(options, 'imports'),
+      }),
+    )
+  }
+
   if (enableUnicorn) {
-    configs.push(unicorn(enableUnicorn === true ? {} : enableUnicorn))
+    configs.push(
+      unicorn(enableUnicorn === true ? {} : enableUnicorn),
+    )
   }
 
   if (enableVue) {
@@ -165,81 +195,113 @@ export function jun(
   }
 
   if (enableJsx) {
-    configs.push(jsx())
+    configs.push(
+      jsx(enableJsx === true ? {} : enableJsx),
+    )
   }
 
   if (enableTypeScript) {
-    configs.push(typescript({
-      ...typescriptOptions,
-      componentExts,
-      overrides: getOverrides(options, 'typescript'),
-      type: options.type,
-    }))
+    configs.push(
+      typescript({
+        ...typescriptOptions,
+        componentExts,
+        overrides: getOverrides(options, 'typescript'),
+        type: options.type,
+      }),
+    )
   }
 
   if (stylisticOptions) {
-    configs.push(stylistic({
-      ...stylisticOptions,
-      lessOpinionated: options.lessOpinionated,
-      overrides: getOverrides(options, 'stylistic'),
-    }))
+    configs.push(
+      stylistic({
+        ...stylisticOptions,
+        lessOpinionated: options.lessOpinionated,
+        overrides: getOverrides(options, 'stylistic'),
+      }),
+    )
   }
 
   if (enableRegexp) {
-    configs.push(regexp(typeof enableRegexp === 'boolean' ? {} : enableRegexp))
+    configs.push(
+      regexp(typeof enableRegexp === 'boolean' ? {} : enableRegexp),
+    )
   }
 
   if (options.test ?? true) {
-    configs.push(test({
-      isInEditor,
-      overrides: getOverrides(options, 'test'),
-    }))
+    configs.push(
+      test({
+        isInEditor,
+        overrides: getOverrides(options, 'test'),
+      }),
+    )
   }
 
   if (enableVue) {
-    configs.push(vue({
-      ...resolveSubOptions(options, 'vue'),
-      overrides: getOverrides(options, 'vue'),
-      stylistic: stylisticOptions,
-      typescript: !!enableTypeScript,
-    }))
+    configs.push(
+      vue({
+        ...resolveSubOptions(options, 'vue'),
+        overrides: getOverrides(options, 'vue'),
+        stylistic: stylisticOptions,
+        typescript: !!enableTypeScript,
+      }),
+    )
   }
 
   if (enableReact) {
-    configs.push(react({
-      overrides: getOverrides(options, 'react'),
-      tsconfigPath,
-    }))
+    configs.push(
+      react({
+        ...typescriptOptions,
+        ...resolveSubOptions(options, 'react'),
+        overrides: getOverrides(options, 'react'),
+        tsconfigPath,
+      }),
+    )
+  }
+
+  if (enableNextjs) {
+    configs.push(
+      nextjs({
+        overrides: getOverrides(options, 'nextjs'),
+      }),
+    )
   }
 
   if (enableSolid) {
-    configs.push(solid({
-      overrides: getOverrides(options, 'solid'),
-      tsconfigPath,
-      typescript: !!enableTypeScript,
-    }))
+    configs.push(
+      solid({
+        overrides: getOverrides(options, 'solid'),
+        tsconfigPath,
+        typescript: !!enableTypeScript,
+      }),
+    )
   }
 
   if (enableSvelte) {
-    configs.push(svelte({
-      overrides: getOverrides(options, 'svelte'),
-      stylistic: stylisticOptions,
-      typescript: !!enableTypeScript,
-    }))
+    configs.push(
+      svelte({
+        overrides: getOverrides(options, 'svelte'),
+        stylistic: stylisticOptions,
+        typescript: !!enableTypeScript,
+      }),
+    )
   }
 
   if (enableUnoCSS) {
-    configs.push(unocss({
-      ...resolveSubOptions(options, 'unocss'),
-      overrides: getOverrides(options, 'unocss'),
-    }))
+    configs.push(
+      unocss({
+        ...resolveSubOptions(options, 'unocss'),
+        overrides: getOverrides(options, 'unocss'),
+      }),
+    )
   }
 
   if (enableAstro) {
-    configs.push(astro({
-      overrides: getOverrides(options, 'astro'),
-      stylistic: stylisticOptions,
-    }))
+    configs.push(
+      astro({
+        overrides: getOverrides(options, 'astro'),
+        stylistic: stylisticOptions,
+      }),
+    )
   }
 
   if (options.jsonc ?? true) {
@@ -253,36 +315,52 @@ export function jun(
     )
   }
 
+  if (enableCatalogs) {
+    const optionsPnpm = resolveSubOptions(options, 'pnpm')
+    configs.push(
+      pnpm({
+        isInEditor,
+        json: options.jsonc !== false,
+        yaml: options.yaml !== false,
+        ...optionsPnpm,
+      }),
+    )
+  }
+
   if (options.yaml ?? true) {
-    configs.push(yaml({
-      overrides: getOverrides(options, 'yaml'),
-      stylistic: stylisticOptions,
-    }))
+    configs.push(
+      yaml({
+        overrides: getOverrides(options, 'yaml'),
+        stylistic: stylisticOptions,
+      }),
+    )
   }
 
   if (options.toml ?? true) {
-    configs.push(toml({
-      overrides: getOverrides(options, 'toml'),
-      stylistic: stylisticOptions,
-    }))
+    configs.push(
+      toml({
+        overrides: getOverrides(options, 'toml'),
+        stylistic: stylisticOptions,
+      }),
+    )
   }
 
   if (options.markdown ?? true) {
     configs.push(
-      markdown(
-        {
-          componentExts,
-          overrides: getOverrides(options, 'markdown'),
-        },
-      ),
+      markdown({
+        componentExts,
+        overrides: getOverrides(options, 'markdown'),
+      }),
     )
   }
 
   if (options.formatters) {
-    configs.push(formatters(
-      options.formatters,
-      typeof stylisticOptions === 'boolean' ? {} : stylisticOptions,
-    ))
+    configs.push(
+      formatters(
+        options.formatters,
+        typeof stylisticOptions === 'boolean' ? {} : stylisticOptions,
+      ),
+    )
   }
 
   configs.push(
@@ -290,18 +368,16 @@ export function jun(
   )
 
   if ('files' in options) {
-    throw new Error('[@jun2030/eslint-config] The first argument should not contain the "files" property as the options are supposed to be global. Place it in the second or later config instead.')
+    throw new Error('[@2030/eslint-config] The first argument should not contain the "files" property as the options are supposed to be global. Place it in the second or later config instead.')
   }
 
   // User can optionally pass a flat config item to the first argument
   // We pick the known keys as ESLint would do schema validation
   const fusedConfig = flatConfigProps.reduce((acc, key) => {
-    if (key in options)
-      acc[key] = options[key] as any
+    if (key in options) { acc[key] = options[key] as any }
     return acc
   }, {} as TypedFlatConfigItem)
-  if (Object.keys(fusedConfig).length)
-    configs.push([fusedConfig])
+  if (Object.keys(fusedConfig).length) { configs.push([fusedConfig]) }
 
   let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>()
 
@@ -314,6 +390,17 @@ export function jun(
   if (autoRenamePlugins) {
     composer = composer
       .renamePlugins(defaultPluginRenaming)
+  }
+
+  if (isInEditor) {
+    composer = composer
+      .disableRulesFix([
+        'unused-imports/no-unused-imports',
+        'test/no-only-tests',
+        'prefer-const',
+      ], {
+        builtinRules: () => import(['eslint', 'use-at-your-own-risk'].join('/')).then(r => r.builtinRules),
+      })
   }
 
   return composer
@@ -329,7 +416,7 @@ export function resolveSubOptions<K extends keyof OptionsConfig>(
 ): ResolvedOptions<OptionsConfig[K]> {
   return typeof options[key] === 'boolean'
     ? {} as any
-    : options[key] || {}
+    : options[key] || {} as any
 }
 
 export function getOverrides<K extends keyof OptionsConfig>(

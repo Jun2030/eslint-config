@@ -1,44 +1,17 @@
 {
-  "cSpell.words": [
-    "astro",
-    "attributify",
-    "backreference",
-    "bumpp",
-    "camelcase",
-    "dprint",
-    "ependencies",
-    "esmodule",
-    "esno",
-    "execa",
-    "IIFE",
-    "isnan",
-    "JETBRAINS",
-    "jiti",
-    "jsdelivr",
-    "linebreak",
-    "nocheck",
-    "nonwords",
-    "NVIM",
-    "pcss",
-    "picocolors",
-    "slidev",
-    "stroustrup",
-    "tsup",
-    "typecheck",
-    "typegen",
-    "unocss",
-    "vitepress"
-  ],
+  // Disable the default formatter, use eslint instead
   "prettier.enable": false,
   "editor.formatOnSave": false,
+
+  // Auto fix
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "never"
   },
-  "eslint.options": {
-    "flags": ["unstable_ts_config"]
-  },
+
   "eslint.runtime": "node",
+
+  // Silent the stylistic rules in your IDE, but still auto fix them
   "eslint.rules.customizations": [
     { "rule": "style/*", "severity": "off", "fixable": true },
     { "rule": "*-indent", "severity": "off", "fixable": true },
@@ -50,6 +23,8 @@
     { "rule": "*quotes", "severity": "off", "fixable": true },
     { "rule": "*semi", "severity": "off", "fixable": true }
   ],
+
+  // Enable eslint for all supported languages
   "eslint.validate": [
     "javascript",
     "javascriptreact",
@@ -59,15 +34,10 @@
     "html",
     "markdown",
     "json",
+    "json5",
     "jsonc",
     "yaml",
     "toml",
     "xml"
-  ],
-  "pair-diff.patterns": [
-    {
-      "source": "./fixtures/output/**/*.*",
-      "target": "./fixtures/input/<base>"
-    }
   ]
 }

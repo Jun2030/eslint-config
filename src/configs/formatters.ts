@@ -46,8 +46,7 @@ export async function formatters(
     (options.xml || options.svg) ? '@prettier/plugin-xml' : undefined,
   ])
 
-  if (options.slidev && options.markdown !== true && options.markdown !== 'prettier')
-    throw new Error('`slidev` option only works when `markdown` is enabled with `prettier`')
+  if (options.slidev && options.markdown !== true && options.markdown !== 'prettier') { throw new Error('`slidev` option only works when `markdown` is enabled with `prettier`') }
 
   const {
     indent,
@@ -230,9 +229,9 @@ export async function formatters(
           'error',
           formater === 'prettier'
             ? mergePrettierOptions(prettierOptions, {
-              embeddedLanguageFormatting: 'off',
-              parser: 'markdown',
-            })
+                embeddedLanguageFormatting: 'off',
+                parser: 'markdown',
+              })
             : {
                 ...dprintOptions,
                 language: 'markdown',

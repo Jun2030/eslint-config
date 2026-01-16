@@ -15,7 +15,7 @@ export function getEslintConfigContent(
   additionalConfigs?: string[],
 ): string {
   return `
-import jun from '@jun2030/eslint-config'
+import jun from '@2030/eslint-config'
 
 export default jun({
 ${mainConfig}
