@@ -17,8 +17,6 @@
 - 需要 ESLint v9.5.0+
 
 > [!WARNING]
-> 此配置基于 [antfu/eslint-config](https://github.com/antfu/eslint-config) 最新版本同步更新，保持了其完整功能和最佳实践。
->
 > 这是一个 **个人配置**，包含很多主观意见。更改可能不适合所有人和所有用例。
 >
 > 如果你直接使用此配置，建议 **每次更新时都审查变更**。如果你想要更多控制，请随时 fork。谢谢！
@@ -529,7 +527,7 @@ npx @eslint/config-inspector
 
 ## 致谢
 
-本配置基于 [antfu/eslint-config](https://github.com/antfu/eslint-config) 进行同步更新，感谢 Anthony Fu 的出色工作！
+本配置基于 [antfu/eslint-config](https://github.com/antfu/eslint-config) 进行，感谢 Anthony Fu 的出色工作！
 
 ## 许可证
 

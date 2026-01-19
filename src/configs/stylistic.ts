@@ -61,7 +61,7 @@ export async function stylistic(
 
         ...(lessOpinionated
           ? {
-              // curly: ['error', 'multi-line'],
+            // curly: ['error', 'multi-line'],
             }
           : {
               'jun/curly': 'error',
@@ -70,6 +70,7 @@ export async function stylistic(
             }
         ),
 
+        'style/brace-style': ['error', '1tbs', { allowSingleLine: true }],
         'style/generator-star-spacing': ['error', { after: true, before: false }],
         'style/max-statements-per-line': ['error', { max: 2 }],
         'style/yield-star-spacing': ['error', { after: true, before: false }],
